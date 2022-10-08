@@ -1,3 +1,4 @@
+import 'package:dirm/core/colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -5,7 +6,16 @@ class AppTheme {
   static ThemeData get darkTheme => _getDarkTheme();
 
   static ThemeData _getLightTheme() {
-    return ThemeData.light();
+    return ThemeData(
+        brightness: Brightness.light,
+        primaryColor: primaryColor,
+        primaryColorLight: primaryLightColor,
+        primaryColorDark: primaryDarkColor,
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(secondary: secondaryColor),
+        appBarTheme: AppBarTheme(
+          backgroundColor: primaryColor,
+        ));
   }
 
   static ThemeData _getDarkTheme() {

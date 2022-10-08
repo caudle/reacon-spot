@@ -1,4 +1,5 @@
 import 'package:dirm/application/login/login_cubit.dart';
+import 'package:dirm/screen/auth/forgot_password/phone_page.dart';
 import 'package:dirm/util/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,23 +27,22 @@ class LoginForm extends StatelessWidget {
         }
       },
       child: Align(
-        alignment: const Alignment(0, -1 / 3),
+        alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Form(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 120),
-                const SizedBox(height: 16),
+                //const SizedBox(height: 120),
                 _EmailInput(),
-                const SizedBox(height: 8),
+                //const SizedBox(height: 8),
                 _PasswordInput(),
-                const SizedBox(height: 8),
+                const _ForgotPassword(),
+                const SizedBox(height: 20),
                 _LoginButton(),
-                const SizedBox(height: 8),
-                _GoogleLoginButton(),
-                const SizedBox(height: 4),
+                const SizedBox(height: 30),
                 _SignUpButton(),
               ],
             ),
@@ -65,12 +65,26 @@ class _EmailInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'email',
             helperText: '',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            focusedBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            errorBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(vertical: 15),
+            prefixIcon: Icon(
+              Icons.email,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           ),
           validator: (email) {
             if (RegExp(emailRegex).hasMatch(email!)) {
@@ -98,12 +112,26 @@ class _PasswordInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'password',
             helperText: '',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            focusedBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            errorBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(vertical: 15),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           ),
           validator: (value) {
             if (value!.isNotEmpty) {
@@ -118,6 +146,31 @@ class _PasswordInput extends StatelessWidget {
   }
 }
 
+class _ForgotPassword extends StatelessWidget {
+  const _ForgotPassword({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topRight,
+      child: TextButton(
+          onPressed: () {
+            // nVg to phone verifc
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: ((context) => const PhonePage()),
+                ));
+          },
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.secondary),
+          ),
+          child: const Text('Forgot password?')),
+    );
+  }
+}
+
 class _LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -128,9 +181,10 @@ class _LoginButton extends StatelessWidget {
             : ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  primary: const Color(0xFFFFD600),
+                  primary: Theme.of(context).primaryColorDark,
+                  fixedSize: Size(MediaQuery.of(context).size.width, 60),
                 ),
                 onPressed: isemail(state.email) && isPassword(state.password)
                     ? () => context.read<LoginCubit>().loginWithCredentials()
@@ -138,27 +192,6 @@ class _LoginButton extends StatelessWidget {
                 child: const Text('LOGIN'),
               );
       },
-    );
-  }
-}
-
-class _GoogleLoginButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ElevatedButton.icon(
-      label: const Text(
-        'SIGN IN WITH GOOGLE',
-        style: TextStyle(color: Colors.white),
-      ),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        primary: theme.colorScheme.secondary,
-      ),
-      icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
-      onPressed: () => context.read<LoginCubit>().loginWithGoogle(),
     );
   }
 }
@@ -171,7 +204,7 @@ class _SignUpButton extends StatelessWidget {
       onPressed: () => Navigator.of(context).pushReplacementNamed('/register'),
       child: Text(
         'CREATE ACCOUNT',
-        style: TextStyle(color: theme.primaryColor),
+        style: TextStyle(color: theme.primaryColorLight),
       ),
     );
   }

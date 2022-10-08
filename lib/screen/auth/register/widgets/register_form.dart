@@ -1,4 +1,5 @@
 import 'package:dirm/application/register/register_bloc.dart';
+import 'package:dirm/screen/auth/register/phone_verification.dart';
 
 import 'package:flutter/material.dart';
 
@@ -30,24 +31,38 @@ class RegisterForm extends StatelessWidget {
         }
         if (state.issuccess) {
           // go to phone verf page
-          Navigator.pushNamed(context, '/register/phone-verification');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: ((context) => PhoneVerificationPage(
+                      phoneNumber: state.phone!,
+                      route: '/bottom-nav-bar',
+                    )),
+              ));
         }
       },
       child: SingleChildScrollView(
         child: Align(
-            child: Column(
-          children: const [
-            _NameInput(),
-            SizedBox(height: 10),
-            _EmailInput(),
-            SizedBox(height: 10),
-            _PhoneInput(),
-            SizedBox(height: 10),
-            _PasswordInput(),
-            SizedBox(height: 10),
-            _ConfirmpasswordInput(),
-            _RegisterButton(),
-          ],
+            child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+          child: Column(
+            children: [
+              SizedBox(height: 50),
+              _NameInput(),
+              SizedBox(height: 20),
+              _EmailInput(),
+              SizedBox(height: 20),
+              _PhoneInput(),
+              SizedBox(height: 20),
+              _PasswordInput(),
+              SizedBox(height: 20),
+              _ConfirmpasswordInput(),
+              SizedBox(height: 30),
+              _RegisterButton(),
+              SizedBox(height: 25),
+              _LoginButton(),
+            ],
+          ),
         )),
       ),
     );
@@ -62,26 +77,36 @@ class _NameInput extends StatelessWidget {
     return BlocBuilder<RegisterBloc, RegisterState>(
       buildWhen: ((previous, current) => current.name != previous.name),
       builder: (context, state) {
-        return TextFormField(
+        return TextField(
           keyboardType: TextInputType.name,
           decoration: InputDecoration(
-            labelText: "full name",
-            prefixIcon: Icon(
-              Icons.phone,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            focusedBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            errorBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(vertical: 15),
-            errorText: state.name == null
-                ? ''
-                : state.isname
-                    ? ''
-                    : 'enter valid name',
-          ),
+              labelText: "full name",
+              prefixIcon: Icon(
+                Icons.perm_identity,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorLight)),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorLight)),
+              focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.red)),
+              errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.red)),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+              errorText: state.name == null
+                  ? null
+                  : state.isname
+                      ? null
+                      : 'enter valid name',
+              errorStyle: const TextStyle(color: Colors.red)),
           cursorColor: Theme.of(context).primaryColorDark,
           onChanged: ((value) =>
               context.read<RegisterBloc>().add(NameChanged(value))),
@@ -107,16 +132,26 @@ class _PhoneInput extends StatelessWidget {
               Icons.phone,
               color: Theme.of(context).iconTheme.color,
             ),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            focusedBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            errorBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(vertical: 15),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             errorText: state.phone == null
-                ? ''
+                ? null
                 : state.isphone
-                    ? ''
+                    ? null
                     : 'enter valid phone numbe',
           ),
           cursorColor: Theme.of(context).primaryColorDark,
@@ -142,20 +177,29 @@ class _EmailInput extends StatelessWidget {
           decoration: InputDecoration(
               labelText: "email",
               prefixIcon: Icon(
-                Icons.phone,
+                Icons.email,
                 color: Theme.of(context).iconTheme.color,
               ),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-              focusedBorder:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-              errorBorder:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-              contentPadding: const EdgeInsets.symmetric(vertical: 15),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorLight)),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).primaryColorLight)),
+              focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.red)),
+              errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.red)),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               errorText: state.email == null
-                  ? ''
+                  ? null
                   : state.isemail
-                      ? ''
+                      ? null
                       : 'enter valid email address'),
           cursorColor: Theme.of(context).primaryColorDark,
           onChanged: (value) {
@@ -176,24 +220,33 @@ class _PasswordInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return TextFormField(
-          keyboardType: TextInputType.visiblePassword,
           obscureText: true,
           decoration: InputDecoration(
             labelText: "password",
             prefixIcon: Icon(
-              Icons.phone,
+              Icons.lock,
               color: Theme.of(context).iconTheme.color,
             ),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            focusedBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            errorBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(vertical: 15),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             errorText: state.password == null
-                ? ''
+                ? null
                 : state.ispassword
-                    ? ''
+                    ? null
                     : 'weak password',
           ),
           cursorColor: Theme.of(context).primaryColorDark,
@@ -218,24 +271,33 @@ class _ConfirmpasswordInput extends StatelessWidget {
           previous.confirmpassword != current.confirmpassword,
       builder: (context, state) {
         return TextFormField(
-          keyboardType: TextInputType.visiblePassword,
           obscureText: true,
           decoration: InputDecoration(
             labelText: "confirm password",
             prefixIcon: Icon(
-              Icons.phone,
+              Icons.lock,
               color: Theme.of(context).iconTheme.color,
             ),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            focusedBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            errorBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(vertical: 15),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: Theme.of(context).primaryColorLight)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.red)),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             errorText: state.confirmpassword == null
-                ? ''
+                ? null
                 : state.ispasswordMatch
-                    ? ''
+                    ? null
                     : 'password do not match',
           ),
           cursorColor: Theme.of(context).primaryColorDark,
@@ -259,9 +321,10 @@ class _RegisterButton extends StatelessWidget {
           : ElevatedButton(
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                primary: const Color(0xFFFFD600),
+                primary: Theme.of(context).primaryColorDark,
+                fixedSize: Size(MediaQuery.of(context).size.width, 60),
               ),
               onPressed: state.isname &&
                       state.isemail &&
@@ -275,5 +338,19 @@ class _RegisterButton extends StatelessWidget {
               child: const Text('Register'),
             );
     });
+  }
+}
+
+class _LoginButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextButton(
+      onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
+      child: Text(
+        'LOG IN',
+        style: TextStyle(color: theme.primaryColorLight),
+      ),
+    );
   }
 }

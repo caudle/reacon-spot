@@ -1,57 +1,48 @@
-import 'package:dirm/services/firebase/auth_service.dart';
-import 'package:dirm/services/firebase/exceptions.dart';
+import 'package:dirm/services/api/rest_api.dart';
+
+import 'package:dirm/services/storage/database_service.dart';
 import 'package:dirm/util/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:equatable/equatable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit(this._authService) : super(const LoginState());
+  LoginCubit(this.restApi, this.databaseService) : super(const LoginState());
 
-  final AuthService _authService;
+  final RestApi restApi;
+  final DatabaseService databaseService;
 
   void emailChanged(String email) {
-    emit(state.copyWith(email: email));
+    emit(state.copyWith(
+        email: email, errorMessage: '', isloading: false, issuccess: false));
   }
 
   void passwordChanged(String password) {
-    emit(
-      state.copyWith(password: password),
-    );
+    emit(state.copyWith(
+        password: password,
+        errorMessage: '',
+        isloading: false,
+        issuccess: false));
   }
 
   void loginWithCredentials() async {
     // validate email n pass
     if (!(isemail(state.email) && isPassword(state.password))) return;
     emit(state.copyWith(isloading: true, issuccess: false, errorMessage: ''));
-    // log in user
     try {
-      await _authService.logInWithEmailAndPassword(
-          email: state.email, password: state.password);
+      // log in to api
+      final resultMap =
+          await restApi.login(email: state.email, password: state.password);
+      // store user to local db
+      await databaseService.saveUser(resultMap['user']);
+      // store user token to db
+      await databaseService.saveToken(resultMap['token']);
       emit(state.copyWith(isloading: false, issuccess: true, errorMessage: ''));
-    } on LogInWithEmailAndPasswordFailure catch (e) {
-      emit(
-        state.copyWith(
-            isloading: false, errorMessage: e.message, issuccess: false),
-      );
     } catch (e) {
-      emit(state.copyWith(
-          isloading: false, errorMessage: e.toString(), issuccess: false));
-    }
-  }
-
-  void loginWithGoogle() async {
-    emit(state.copyWith(isloading: true, issuccess: false, errorMessage: ''));
-    // try log in user
-    try {
-      await _authService.logInWithGoogle();
-      emit(state.copyWith(isloading: false, issuccess: true, errorMessage: ''));
-    } on LogInWithGoogleFailure catch (e) {
-      emit(state.copyWith(
-          isloading: false, errorMessage: e.toString(), issuccess: false));
-    } catch (e) {
+      print('log in error: ${e.toString()}');
       emit(state.copyWith(
           isloading: false, errorMessage: e.toString(), issuccess: false));
     }
