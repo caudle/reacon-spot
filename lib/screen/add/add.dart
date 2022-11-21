@@ -1708,7 +1708,7 @@ class _AddPageState extends State<AddPage> with AutomaticKeepAliveClientMixin {
     print("name: ${nameController.value.text}");
     return Listing(
       listingId: "",
-      name: nameController.value.text,
+      title: nameController.value.text,
       category: listingDropdownValue,
       nature: naturesDropdownValue,
       hostId: user.userId,

@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:dirm/modal/land.dart';
 import 'package:dirm/modal/listing.dart';
 import 'package:dirm/modal/venue.dart';
 import 'package:dirm/services/api/rest_api.dart';
+import 'package:dirm/services/storage/database_service.dart';
 import 'package:dirm/util/shared.dart';
 import "package:flutter/material.dart";
 import 'package:intl/intl.dart';
+import 'package:web_socket_channel/io.dart';
 
 import '../../modal/user.dart';
 import '../../util/constants.dart';
@@ -22,11 +26,16 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   RestApi api = RestApi();
+  DatabaseService dbService = DatabaseService();
   int imageIndex = 0;
   Future<User>? futureAgent;
+  User? loggedUser;
   Future<List<Listing>>? moreListingsFuture;
   Future<List<Land>>? moreLandsFuture;
   Future<List<Venue>>? moreVenuesFuture;
+
+  IOWebSocketChannel existsChannel =
+      IOWebSocketChannel.connect('$ws/user/saved/exists');
 
   /// get agent total adds
 
@@ -34,6 +43,9 @@ class _DetailPageState extends State<DetailPage> {
   void initState() {
     //get agent
     getAgentUser(api);
+    getLoggedUser(dbService).then((user) => setState(() {
+          loggedUser = user;
+        }));
     if (widget.category == "home") {
       getMoreListings(api, widget.property);
     }
@@ -80,16 +92,31 @@ class _DetailPageState extends State<DetailPage> {
                       child: Text(
                           '${imageIndex + 1}/${widget.property.photos.length}'),
                     ),
+                    // fav icon
                     Positioned(
                         bottom: 60,
                         right: 8,
-                        child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.favorite_border_outlined,
-                              size: 35,
-                              color: Colors.white,
-                            ))),
+                        child: StreamBuilder<dynamic>(
+                            stream: favStream(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                print(jsonDecode(snapshot.data));
+                                bool exists = jsonDecode(snapshot.data);
+                                return IconButton(
+                                    onPressed: () {
+                                      exists ? removeFav() : addFav();
+                                    },
+                                    icon: Icon(
+                                      exists
+                                          ? Icons.favorite_rounded
+                                          : Icons.favorite_outline,
+                                      size: 35,
+                                      //color: Colors.white,
+                                    ));
+                              } else {
+                                return Container();
+                              }
+                            })),
                     Positioned(
                         bottom: 10,
                         right: 8,
@@ -409,7 +436,7 @@ class _DetailPageState extends State<DetailPage> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(listing.name.capitalize()),
+                      child: Text(listing.title.capitalize()),
                     ),
                     Wrap(
                       children: [
@@ -849,6 +876,10 @@ class _DetailPageState extends State<DetailPage> {
     });
   }
 
+  Future<User?> getLoggedUser(DatabaseService dbService) {
+    return dbService.getUser();
+  }
+
   // get more listings
   void getMoreListings(RestApi api, Listing listing) {
     final future =
@@ -871,5 +902,68 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {
       moreVenuesFuture = future;
     });
+  }
+
+  Stream favStream() {
+    String? id;
+    String? favName;
+    if (widget.category == "home") {
+      id = widget.property.listingId;
+      favName = "listing";
+    }
+    if (widget.category == "land") {
+      id = widget.property.landId;
+      favName = "land";
+    }
+    if (widget.category == "event") {
+      id = widget.property.venueId;
+      favName = "venue";
+    }
+    existsChannel.sink.add(jsonEncode({
+      "listingId": id ?? "",
+      "userId": loggedUser == null ? "" : loggedUser!.userId,
+      "favName": favName,
+    }));
+    return existsChannel.stream;
+  }
+
+  void removeFav() async {
+    String? id;
+    String? favName;
+    if (widget.category == "home") {
+      id = widget.property.listingId;
+      favName = "listings";
+    }
+    if (widget.category == "land") {
+      id = widget.property.landId;
+      favName = "lands";
+    }
+    if (widget.category == "event") {
+      id = widget.property.venueId;
+      favName = "venues";
+    }
+    print('deleting....');
+    await api.deleteFavListing(
+        userId: loggedUser!.userId, listingId: id!, favName: favName!);
+  }
+
+  void addFav() async {
+    String? id;
+    String? favName;
+    if (widget.category == "home") {
+      id = widget.property.listingId;
+      favName = "listings";
+    }
+    if (widget.category == "land") {
+      id = widget.property.landId;
+      favName = "lands";
+    }
+    if (widget.category == "event") {
+      id = widget.property.venueId;
+      favName = "venues";
+    }
+    print('adding....');
+    await api.addFavListing(
+        userId: loggedUser!.userId, listingId: id!, favName: favName!);
   }
 }

@@ -3,7 +3,7 @@ import 'dart:convert';
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Listing {
   final String listingId;
-  String name;
+  String title;
   String category; // eg house,apt
   String nature; // eg rent,sale
   String hostId;
@@ -23,7 +23,7 @@ class Listing {
   DateTime createdAt;
   Listing({
     required this.listingId,
-    required this.name,
+    required this.title,
     required this.category,
     required this.nature,
     required this.hostId,
@@ -45,7 +45,7 @@ class Listing {
 
   Map<String, dynamic> toApiMap() {
     return <String, dynamic>{
-      'name': name,
+      'title': title,
       'category': category,
       'nature': nature,
       'hostId': hostId,
@@ -69,7 +69,7 @@ class Listing {
   factory Listing.fromApiMap(Map<String, dynamic> map) {
     return Listing(
       listingId: map['_id'] as String,
-      name: map['name'] as String,
+      title: map['title'] as String,
       category: map['category'] as String,
       nature: map['nature'] as String,
       hostId: map['hostId'] as String,

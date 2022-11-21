@@ -462,7 +462,7 @@ class _HomePageState extends State<HomePage>
                                               children: [
                                                 Flexible(
                                                     child: Text(
-                                                        listing.name
+                                                        listing.title
                                                             .capitalize(),
                                                         style: Theme.of(context)
                                                             .textTheme

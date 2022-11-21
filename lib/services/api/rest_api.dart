@@ -730,4 +730,53 @@ class RestApi {
       throw Exception('Oops something went wrong: ${e.toString()}');
     }
   }
+
+  Future addFavListing(
+      {required String userId,
+      required String listingId,
+      required String favName}) async {
+    //create uri
+    final String url = '/user/saved/$userId';
+
+    //http patch req
+    final response = await http.patch(Uri.parse(baseUrl + url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Accept": "application/json",
+        },
+        body: jsonEncode(<String, String>{
+          "listingId": listingId,
+          "favNmae": favName,
+        }));
+
+    // check for error
+    if (response.statusCode == 400) {
+      final map = json.decode(response.body);
+      throw Exception(map['error']);
+    }
+  }
+
+  Future deleteFavListing(
+      {required String userId,
+      required String listingId,
+      required String favName}) async {
+    //create uri
+    final String url = '/user/saved/$userId';
+    //http patch req
+    final response = await http.delete(Uri.parse(baseUrl + url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Accept": "application/json",
+        },
+        body: jsonEncode(<String, String>{
+          "listingId": listingId,
+          "favName": favName,
+        }));
+
+    // check for error
+    if (response.statusCode == 400) {
+      final map = json.decode(response.body);
+      throw Exception(map['error']);
+    }
+  }
 }
