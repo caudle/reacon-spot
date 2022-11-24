@@ -27,7 +27,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   void initState() {
-    FlutterNativeSplash.remove(); 
+    FlutterNativeSplash.remove();
     super.initState();
   }
 
@@ -40,6 +40,7 @@ class _AppState extends State<App> {
         builder: (context, state) {
           return state is ThemeLoaded
               ? MaterialApp(
+                  debugShowCheckedModeBanner: false,
                   theme: state.themeData,
                   initialRoute: _getInitialRoute(
                       islogged: widget.islogged, init: widget.initScreen),

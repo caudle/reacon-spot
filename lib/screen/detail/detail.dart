@@ -93,7 +93,7 @@ class _DetailPageState extends State<DetailPage> {
                           '${imageIndex + 1}/${widget.property.photos.length}'),
                     ),
                     // fav icon
-                    Positioned(
+                    /* Positioned(
                         bottom: 60,
                         right: 8,
                         child: StreamBuilder<dynamic>(
@@ -116,8 +116,8 @@ class _DetailPageState extends State<DetailPage> {
                               } else {
                                 return Container();
                               }
-                            })),
-                    Positioned(
+                            })), */
+                    /*Positioned(
                         bottom: 10,
                         right: 8,
                         child: IconButton(
@@ -126,7 +126,7 @@ class _DetailPageState extends State<DetailPage> {
                               Icons.share,
                               size: 35,
                               color: Colors.white,
-                            ))),
+                            ))), */
                   ],
                 )),
           ),
@@ -246,11 +246,22 @@ class _DetailPageState extends State<DetailPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Image.network(
-                                        "$baseUrl/${listing.photos[0]}",
-                                        fit: BoxFit.cover,
-                                        height: 100,
-                                        width: 130,
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: ((context) =>
+                                                      DetailPage(
+                                                          property: listing,
+                                                          category: "home"))));
+                                        },
+                                        child: Image.network(
+                                          "$baseUrl/${listing.photos[0]}",
+                                          fit: BoxFit.cover,
+                                          height: 100,
+                                          width: 130,
+                                        ),
                                       ),
                                       Flexible(
                                           child: Padding(
@@ -268,8 +279,11 @@ class _DetailPageState extends State<DetailPage> {
                                 }),
                           ))
                         : SliverToBoxAdapter(
+                            child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
                             child: Text(
-                                "No ${widget.property.category}'s like this found"));
+                                "No ${widget.property.category}'s like this found"),
+                          ));
                   } else if (snapshot.hasError) {
                     return SliverToBoxAdapter(
                       child: Center(child: Text(snapshot.error.toString())),
@@ -302,11 +316,22 @@ class _DetailPageState extends State<DetailPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Image.network(
-                                        "$baseUrl/${land.photos[0]}",
-                                        fit: BoxFit.cover,
-                                        height: 100,
-                                        width: 130,
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: ((context) =>
+                                                      DetailPage(
+                                                          property: land,
+                                                          category: "land"))));
+                                        },
+                                        child: Image.network(
+                                          "$baseUrl/${land.photos[0]}",
+                                          fit: BoxFit.cover,
+                                          height: 100,
+                                          width: 130,
+                                        ),
                                       ),
                                       Flexible(
                                           child: Padding(
@@ -323,8 +348,11 @@ class _DetailPageState extends State<DetailPage> {
                                 }),
                           ))
                         : SliverToBoxAdapter(
+                            child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
                             child: Text(
-                                "No ${widget.property.category}'s like this found"));
+                                "No ${widget.property.category}'s like this found"),
+                          ));
                   } else if (snapshot.hasError) {
                     return SliverToBoxAdapter(
                       child: Center(child: Text(snapshot.error.toString())),
@@ -357,11 +385,22 @@ class _DetailPageState extends State<DetailPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Image.network(
-                                        "$baseUrl/${venue.photos[0]}",
-                                        fit: BoxFit.cover,
-                                        height: 100,
-                                        width: 130,
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: ((context) =>
+                                                      DetailPage(
+                                                          property: venue,
+                                                          category: "event"))));
+                                        },
+                                        child: Image.network(
+                                          "$baseUrl/${venue.photos[0]}",
+                                          fit: BoxFit.cover,
+                                          height: 100,
+                                          width: 130,
+                                        ),
                                       ),
                                       Flexible(
                                           child: Padding(
@@ -379,8 +418,11 @@ class _DetailPageState extends State<DetailPage> {
                                 }),
                           ))
                         : SliverToBoxAdapter(
+                            child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
                             child: Text(
-                                "No ${widget.property.category}'s like this found"));
+                                "No ${widget.property.category}'s like this found"),
+                          ));
                   } else if (snapshot.hasError) {
                     return SliverToBoxAdapter(
                       child: Center(child: Text(snapshot.error.toString())),
@@ -797,73 +839,127 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   buildVenuesWidget(Venue venue) {
-    return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          // cat
-          Text(venue.category),
-          Row(
-            children: [
-              Column(
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // cat
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 5),
+              child: Text(venue.category.capitalize(),
+                  style: Theme.of(context).textTheme.titleSmall),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: Text(venue.title),
+                    ),
+                    Wrap(
+                      children: [
+                        const Icon(Icons.place, size: 16),
+                        Text(venue.address.capitalize(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption!
+                                .copyWith(fontSize: 13)),
+                      ],
+                    )
+                  ],
+                ),
+                Text("${formatCurrency.format(venue.price)} TZS",
+                    style: Theme.of(context).textTheme.bodyText1),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            ///details
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('Property Details',
+                  style: Theme.of(context).textTheme.titleSmall),
+            ),
+            // size
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(venue.title),
-                  Row(
-                    children: [
-                      const Icon(Icons.place),
-                      Text(venue.address),
-                    ],
-                  )
+                  Text('Capacity',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2!
+                          .copyWith(fontSize: 13)),
+                  Text("${venue.capacity} people"),
                 ],
               ),
-              Text(venue.price.toString()),
-            ],
-          ),
+            ),
 
-          const SizedBox(height: 20),
+            // contract
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Contract Type',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2!
+                          .copyWith(fontSize: 13)),
+                  Text(venue.nature),
+                ],
+              ),
+            ),
 
-          ///details
-          Text('Property Details'),
-          // size
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Property Size'),
-              Text("${venue.capacity} people"),
-            ],
-          ),
+            // negotiable
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Price negotiable',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2!
+                          .copyWith(fontSize: 13)),
+                  Text(venue.isnegotiable ? "Yes" : "No"),
+                ],
+              ),
+            ),
 
-          // contract
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Contract Type'),
-              Text(venue.nature),
-            ],
-          ),
+            //  dalali fee
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Agency Fee',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2!
+                          .copyWith(fontSize: 13)),
+                  Text("${formatCurrency.format(venue.dalaliFee)} TZS"),
+                ],
+              ),
+            ),
 
-          // negotiable
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Price negotiable'),
-              Text(venue.isnegotiable ? "Yes" : "No"),
-            ],
-          ),
-
-          //  dalali fee
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Agency Fee'),
-              Text("${formatCurrency.format(venue.dalaliFee)} TZS"),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-          // desc
-          Text('Description'),
-          Text(venue.description),
-        ],
+            const SizedBox(height: 20),
+            // desc
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Text('Description',
+                  style: Theme.of(context).textTheme.titleSmall),
+            ),
+            Text(venue.description),
+          ],
+        ),
       ),
     );
   }

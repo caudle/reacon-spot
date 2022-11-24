@@ -586,14 +586,12 @@ class _HomePageState extends State<HomePage>
                                                       size: 14,
                                                     ),
                                                     const SizedBox(width: 5),
-                                                    Flexible(
-                                                        child: Text(
-                                                            land.address
-                                                                .capitalize(),
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .caption)),
+                                                    Text(
+                                                        land.address
+                                                            .capitalize(),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .caption),
                                                   ],
                                                 ),
                                                 Flexible(
@@ -698,14 +696,12 @@ class _HomePageState extends State<HomePage>
                                                       size: 14,
                                                     ),
                                                     const SizedBox(width: 5),
-                                                    Flexible(
-                                                        child: Text(
-                                                            venue.address
-                                                                .capitalize(),
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .caption)),
+                                                    Text(
+                                                        venue.address
+                                                            .capitalize(),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .caption),
                                                   ],
                                                 ),
                                                 Flexible(

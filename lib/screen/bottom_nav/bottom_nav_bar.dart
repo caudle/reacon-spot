@@ -1,17 +1,9 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:dirm/screen/add/add.dart';
-import 'package:dirm/screen/fav/fav.dart';
+//import 'package:dirm/screen/fav/fav.dart';
 import 'package:dirm/screen/home/home.dart';
 import 'package:dirm/screen/profile/profile.dart';
-import 'package:dirm/screen/search/search.dart';
-import 'package:dirm/services/api/rest_api.dart';
-import 'package:dirm/services/storage/database_service.dart';
-import 'package:dirm/util/shared.dart';
+//import 'package:dirm/screen/search/search.dart';
 import 'package:flutter/material.dart';
-
-import '../../modal/listing.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -26,9 +18,9 @@ class _BottomNavBarState extends State<BottomNavBar>
   late PageController _pageController;
   static const List<Widget> pages = [
     HomePage(),
-    FavPage(),
+    //FavPage(),
     AddPage(),
-    SearchPage(),
+    //SearchPage(),
     ProfilePage(),
   ];
 
@@ -61,13 +53,13 @@ class _BottomNavBarState extends State<BottomNavBar>
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "home"),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            /*BottomNavigationBarItem(
+                icon: Icon(Icons.favorite), label: "favourites"),*/
+            BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Add"),
+            /* BottomNavigationBarItem(icon: Icon(Icons.search), label: "search"),*/
             BottomNavigationBarItem(
-                icon: Icon(Icons.favorite), label: "favourites"),
-            BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "add"),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: "search"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle), label: "profile"),
+                icon: Icon(Icons.account_circle), label: "Account"),
           ],
           currentIndex: selectedIndex,
           onTap: changeIndex,
